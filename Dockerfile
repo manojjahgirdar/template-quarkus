@@ -13,6 +13,19 @@ FROM registry.access.redhat.com/ubi8/ubi-minimal
 WORKDIR /work/
 COPY --from=build /usr/src/app/target/*-runner /work/application
 
+USER root
+
+RUN dnf -y update-minimal --security --sec-severity=Important --sec-severity=Critical && dnf clean all
+
+COPY ./licenses /licenses
+
+LABEL name="React UI Patterns" \
+      vendor="IBM" \
+      version="v1.0.0" \
+      release="1" \
+      summary="This is an example of a container image." \
+      description="This container image will deploy a React Node App"
+
 # set up permissions for user `1001`
 RUN chmod 775 /work /work/application \
   && chown -R 1001 /work \
